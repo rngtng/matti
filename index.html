@@ -1,47 +1,104 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
   <head>
-    <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
     <title>Matti's Supermarkt</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <style type="text/css">
+      body {
+        color: #000000;
+        background-color: #FFFFFF;
+        margin: 0;
+      }
+
+      #main {
+        padding-top: -40px;
+        width: 1031px;
+        margin: 0 auto;
+      }
+
+      img {
+        display: block;
+      }
+
+      #schild {
+        top: -270px;
+        left: 870px;
+        position: relative;
+      }
+
+      #footer a {
+        color: #000;
+        margin: 4px 15px;
+      }
+    </style>
+    <script>
+      var maxCartoons = 9,
+      randomCartoonNr = function() {
+        return Math.round(Math.random() * maxCartoons) + 1;
+      }
+      loadCartoon = function(nr) {
+        $("#next").attr("href", "?cartoon=" + randomCartoonNr());
+        $("#cartoon").attr("src", "cartoons/cartoon_" + fillUpZeros(nr, 4) + ".jpg");
+      },
+      fillUpZeros = function pad(number, length) {
+        var str = '' + number;
+        while (str.length < length) {
+          str = '0' + str;
+        }
+        return str;
+      },
+      cartoonNr = randomCartoonNr();
+
+      if (cartoonUrl = decodeURI(window.location.href).split("cartoon=")[1]) {
+        cartoonNr = cartoonUrl.split("&")[0];
+        // TODO: better regexp?? Aussage.match(/cartoon=([^&]+)&.*/g);
+      };
+
+      $(document).ready(function(){
+        loadCartoon(cartoonNr);
+      });
+    </script>
   </head>
-  <body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);" alink="#EE0000" link="#0000EE" vlink="#551A8B">
-    <table style="width: 1031px; margin: 0 auto;" border="0" cellpadding="0" cellspacing="0">
-      <tbody>
-        <tr>
-          <td colspan="3" rowspan="1" style="vertical-align: top;">
-            <a href="/"><img width="1031" height="225" src="images/titel.jpg" border="0"></a>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top" align="right">
-            <a href=""><img width="163" height="165" src="images/stoerer.gif" border="0"></a>
-            <img width="242" height="277" src="images/unter_stoerer.jpg">
-          </td>
-          <td valign="top">
-            <img width="530" height="376" src="images/cartoon_0001.jpg">
-            <!-- <img width="30" height="31" src="images/fb_button.jpg">
-            <img width="37" height="31" src="images/mail_button.jpg">-->
-            <img width="463" height="31" src="images/rechts_buttons.jpg">
-            <img width="530" height="35" src="images/unter_buttons.jpg">
-          </td>
-          <td valign="top" align="left">
-            <img width="259" height="190" src="images/ueber_schild.jpg">
-            <img width="98" height="150" src="images/links_Schild.jpg">
-            <!-- <a href=""><img width="161" height="150" src="images/schild.gif"></a> -->
-            <img width="259" height="102" src="images/unter_schild.jpg">
-          </td>
-        </tr>
-        <tr>
-          <td colspan="3" align="center">
-            <small>
-              <a href="#">anderer Cartoon</a>
-              <a href="#">Text&amp;Konzept</a>
-              <a href="#">Impressum</a>
-              <a href="#">eMail</a>
-            </small>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <body alink="#EE0000" link="#0000EE" vlink="#551A8B">
+    <div id="main">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td colspan="3" valign="bottom">
+              <a href="/"><img width="1031" height="225" src="images/titel.jpg" border="0"></a>
+            </td>
+          </tr>
+          <tr>
+            <td valign="top" align="right">
+              <a id="next" href="/"><img width="163" height="165" src="images/stoerer.gif" border="0"></a>
+              <img width="242" height="277" src="images/unter_stoerer.jpg">
+            </td>
+            <td valign="top">
+              <img id="cartoon" width="530" height="376" src="images/loading.jpg">
+              <img width="530" height="50" src="images/rechts_buttons.png">
+            </td>
+            <td valign="top" align="left">
+              <img width="259" height="190" src="images/ueber_schild.jpg">
+              <img width="98" height="150" src="images/links_Schild.jpg">
+              <img width="259" height="102" src="images/unter_schild.jpg">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" align="center" id="footer">
+              <small>
+                <a href="#">anderer Cartoon</a>
+                <a href="#">Text&amp;Konzept</a>
+                <a href="#">Impressum</a>
+                <a href="#">eMail</a>
+              </small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="#" id="schild"><img width="161" height="150" src="images/schild.gif"></a>
+    </div>
   </body>
 </html>
