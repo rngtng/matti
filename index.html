@@ -36,11 +36,18 @@
     </style>
     <script>
       var maxCartoons = 9,
-      randomCartoonNr = function() {
-        return Math.round(Math.random() * maxCartoons) + 1;
-      }
+      randomCartoonNr = function(currentCartoonNr) {
+        var nr = randomNr(maxCartoons);
+        if (nr == currentCartoonNr) {
+          return randomCartoonNr(nr);
+        }
+        return nr;
+      },
+      randomNr = function(max) {
+        return Math.round(Math.random() * max) + 1;
+      },
       loadCartoon = function(nr) {
-        $("#next").attr("href", "?cartoon=" + randomCartoonNr());
+        $("#next").attr("href", "?cartoon=" + randomCartoonNr(nr));
         $("#cartoon").attr("src", "cartoons/cartoon_" + fillUpZeros(nr, 4) + ".jpg");
       },
       fillUpZeros = function pad(number, length) {
