@@ -1,18 +1,9 @@
 # Matti
 
-Matti's Supermarkt
+Matti's Supermarkt - http://rngtng.github.com/matti
 
 ## Todo
 See GitHub Issues for full details: https://github.com/rngtng/matti/issues
-
-  * Facebook Share
-  * eCard Share
-  * pre-render site on permalink
-  * easy upload
-  * error when permalink not exists
-  * add links
-  * SEO??
-  * ...
 
 ## Deploy
 

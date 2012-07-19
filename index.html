@@ -23,10 +23,23 @@
         display: block;
       }
 
+      #cartoon-fame {
+        background-image: url(images/rechts_buttons.png);
+        background-repeat: no-repeat;
+        background-position: 0 376px;
+      }
+
       #schild {
         top: -270px;
         left: 870px;
         position: relative;
+      }
+
+      #facebook {
+        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+        display: block;
       }
 
       #footer a {
@@ -36,6 +49,7 @@
     </style>
     <script>
       var maxCartoons = 9,
+      appID = "142898152440446",
       randomCartoonNr = function(currentCartoonNr) {
         var nr = randomNr(maxCartoons);
         if (nr == currentCartoonNr) {
@@ -46,9 +60,12 @@
       randomNr = function(max) {
         return Math.round(Math.random() * max) + 1;
       },
+      cartoonUrl = function(nr) {
+        return "cartoons/cartoon_" + fillUpZeros(nr, 4) + ".jpg";
+      },
       loadCartoon = function(nr) {
         $("#next").attr("href", "?cartoon=" + randomCartoonNr(nr));
-        $("#cartoon").attr("src", "cartoons/cartoon_" + fillUpZeros(nr, 4) + ".jpg");
+        $("#cartoon").attr("src", cartoonUrl(nr));
       },
       fillUpZeros = function pad(number, length) {
         var str = '' + number;
@@ -59,12 +76,28 @@
       },
       cartoonNr = randomCartoonNr();
 
-      if (cartoonUrl = decodeURI(window.location.href).match(/cartoon=(\d+)/)) {
-        var possibleCartoonNr = parseInt(cartoonUrl[1]);
+      if (url = decodeURI(window.location.href).match(/cartoon=(\d+)/)) {
+        var possibleCartoonNr = parseInt(url[1]);
         if (possibleCartoonNr > 0 && possibleCartoonNr <= maxCartoons) {
           cartoonNr = possibleCartoonNr;
         }
       };
+
+      $("#facebook").live("click", function(event) {
+        var params = {
+          app_id:       appID,
+          link:         "http://rngtng.github.com/matti/?cartoon=" + cartoonNr,
+          picture:      "http://rngtng.github.com/matti/" + cartoonUrl(cartoonNr),
+          name:         "Name",
+          caption:      "Caption",
+          description:  "Description",
+          redirect_uri: "http://faceorama.warteschlange.de",
+        };
+
+        $(this).attr("href", function(index, url) {
+          return url + "?" + $.param(params);
+        });
+      });
 
       $(document).ready(function(){
         loadCartoon(cartoonNr);
@@ -85,9 +118,9 @@
               <a id="next" href="/"><img width="163" height="165" src="images/stoerer.gif" border="0"></a>
               <img width="242" height="277" src="images/unter_stoerer.jpg">
             </td>
-            <td valign="top">
+            <td id="cartoon-fame" valign="top" height="426">
               <img id="cartoon" width="530" height="376" src="images/loading.jpg">
-              <img width="530" height="50" src="images/rechts_buttons.png">
+              <a id="facebook" href="https://www.facebook.com/dialog/feed" target="_blank"></a>
             </td>
             <td valign="top" align="left">
               <img width="259" height="190" src="images/ueber_schild.jpg">
@@ -96,7 +129,7 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3" align="center" id="footer">
+            <td id="footer" colspan="3" align="center">
               <small>
                 <a href="#">anderer Cartoon</a>
                 <a href="#">Text&amp;Konzept</a>
