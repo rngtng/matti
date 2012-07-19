@@ -59,9 +59,11 @@
       },
       cartoonNr = randomCartoonNr();
 
-      if (cartoonUrl = decodeURI(window.location.href).split("cartoon=")[1]) {
-        cartoonNr = cartoonUrl.split("&")[0];
-        // TODO: better regexp?? Aussage.match(/cartoon=([^&]+)&.*/g);
+      if (cartoonUrl = decodeURI(window.location.href).match(/cartoon=(\d+)/)) {
+        var possibleCartoonNr = parseInt(cartoonUrl[1]);
+        if (possibleCartoonNr > 0 && possibleCartoonNr <= maxCartoons) {
+          cartoonNr = possibleCartoonNr;
+        }
       };
 
       $(document).ready(function(){
