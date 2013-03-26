@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Matti's Supermarkt</title>
+    <title>Matti's Supermarkt - Cartoons vom Wühltisch des Lebens</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta content="" name="keywords" />
-    <meta content="" name="description" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <meta name="keywords"    content="catroons" />
+    <meta name="description" content="Matti's Supermarkt Cartoons vom Wühltisch des Lebens" />
+    <script language="php">
+      echo '<meta name="dynamic" content="true">';
+    </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <style type="text/css">
       body {
         color: #000000;
@@ -27,26 +30,14 @@
         margin: 0 auto;
       }
 
-      #TODO {
-        background-image: url(images/rechts_buttons.png);
-        background-repeat: no-repeat;
-        background-position: 0 376px;
-      }
-
-      #facebook {
-        margin-top: 5px;
-        width: 30px;
-        height: 30px;
-        display: block;
-      }
-
       #footer a {
         color: #000;
         margin: 4px 15px;
       }
     </style>
     <script>
-      var maxCartoons = 95,
+      var dynamic = ( $('meta[name=dynamic]').size() > 0),
+      maxCartoons = 95,
       appID = "142898152440446",
 
       randomCartoonNr = function(currentCartoonNr) {
@@ -66,7 +57,8 @@
       },
 
       loadCartoon = function(nr) {
-        $(".next").attr("href", "?cartoon=" + randomCartoonNr(nr));
+        urlPattern = (dynamic) ? "/cartoons/" : "?cartoon=";
+        $(".next").attr("href", urlPattern + randomCartoonNr(nr));
         $("#cartoon").attr("src", cartoonUrl(nr));
       },
 
@@ -80,14 +72,14 @@
 
       cartoonNr = randomCartoonNr();
 
-      if (url = decodeURI(window.location.href).match(/cartoon=(\d+)/)) {
+      if (url = decodeURI(window.location.href).match(/cartoons?[=\/](\d+)/)) {
         var possibleCartoonNr = parseInt(url[1]);
         if (possibleCartoonNr > 0 && possibleCartoonNr <= maxCartoons) {
           cartoonNr = possibleCartoonNr;
         }
       };
 
-      $("#facebook").live("click", function(event) {
+      $("#facebook").on("click", function(event) {
         var params = {
           app_id:       appID,
           link:         "http://rngtng.github.com/matti/?cartoon=" + cartoonNr,
@@ -141,7 +133,7 @@
               <small>
                 <a class="next" href="#">zuf&auml;lliger Cartoon</a>
                 <a href="#">Impressum</a>
-                <a href="#">eMail</a>
+                <a href="mailto:service@mattis-supermarkt.de">eMail</a>
               </small>
             </td>
           </tr>
