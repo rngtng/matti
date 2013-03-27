@@ -1,8 +1,6 @@
 RewriteEngine On
 RewriteBase /
 
-RewriteRule ^cartoons/images/(.+)$ /images/$1 [QSA,L]
-RewriteRule ^cartoons/cartoons/(.+)$ /cartoons/$1 [QSA,L]
 RewriteRule ^cartoons/([^.]+)$ load.php?cartoon=$1 [QSA,L]
 
 DirectoryIndex inventory.html load.php index.html
