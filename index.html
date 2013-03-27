@@ -3,11 +3,15 @@
   <head>
     <title>Matti's Supermarkt - Cartoons vom Wühltisch des Lebens</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta name="keywords"    content="catroons" />
-    <meta name="description" content="Matti's Supermarkt Cartoons vom Wühltisch des Lebens" />
+    <meta name="keywords"         content="matti, cartoons" />
+    <meta name="description"      content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
+    <meta property="fb:app_id"    content="142898152440446" />
+    <meta property="og:site_name" content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
     <script language="php">
       $max_cartoons = iterator_count(new DirectoryIterator('cartoons/')) - 2;
-      echo '<meta name="dynamic" content="true" data-max-cartoons="' . $max_cartoons . '">';
+      $cartoonUrl = sprintf("cartoons/msm_cartoon_%04d.jpg", $_GET['cartoon']);
+      echo '<meta property="dynamic"  content="true" data-max-cartoons="' . $max_cartoons . '" />';
+      echo '<meta property="og:image" content="http://www.mattis-supermarkt.de/'.$cartoonUrl.'" />';
       echo '<base href="/">';
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -59,24 +63,9 @@
         if (url = string.match(/cartoons?[=\/](.+)/)) { return url[1]; }
       };
 
-      $("#facebook").on("click", function(event) {
-        var params = {
-          app_id:       $(this).data('app-id'),
-          link:         "http://rngtng.github.com/matti/?cartoon=" + cartoonNr,
-          picture:      "http://rngtng.github.com/matti/" + cartoonUrl(cartoonNr),
-          name:         "Matti's Supermarkt",
-          caption:      "Cartoons vom Wühltisch des Lebens:",
-          description:  "http://www.mattis-supermarkt.de",
-          redirect_uri: "http://faceorama.warteschlange.de",
-        };
-        $(this).attr("href", function(index, url) {
-          return url + "?" + $.param(params);
-        });
-      });
-
       $(document).ready(function(){
-        var dynamic = ( $('meta[name=dynamic]').size() > 0),
-        maxCartoons = parseInt($('meta[name=dynamic],body').data('maxCartoons'));
+        var dynamic = ( $('meta[property=dynamic]').size() > 0),
+        maxCartoons = parseInt($('meta[property=dynamic],body').data('maxCartoons'));
 
         cartoonNr = parseInt(extractCartoonNr(decodeURI(window.location.href)) || randomNr(maxCartoons));
 
@@ -88,6 +77,10 @@
 
         urlPattern = (dynamic) ? "/cartoons/" : "?cartoon=";
         $(".next").attr("href", urlPattern + randomNr(maxCartoons, cartoonNr));
+
+        $("#facebook").attr("href", function(index, url) {
+          return url + decodeURI(window.location.href);
+        });
       });
     </script>
   </head>
@@ -108,12 +101,11 @@
             </td>
             <td id="cartoon-frame" valign="top" width="530" height="376" background="images/loading.gif">
               <script language="php">
-                $cartoonUrl = sprintf("cartoons/msm_cartoon_%04d.jpg", $_GET['cartoon']);
                 echo '<img id="cartoon" width="530" height="376" src="'.$cartoonUrl.'">';
               </script>
             </td>
             <td valign="top" align="left" width="157" height="376" background="images/right.jpg">
-              <a id="facebook" href="https://www.facebook.com/dialog/feed" data-app-id="142898152440446" target="_blank">
+              <a id="facebook" href="http://www.facebook.com/sharer.php?u=" target="_blank">
                 <img width="157" height="376" src="images/blank.gif" border="0">
               </a>
             </td>
