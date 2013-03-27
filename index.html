@@ -39,7 +39,7 @@
     </style>
     <script>
       var randomNr = function(max, exclude) {
-        var nr = Math.round(Math.random() * (max - 1)) + 1;
+        var nr = Math.floor(Math.random() * max) + 1;
         return (nr != exclude) ? nr : randomNr(max, exclude);
       },
 
@@ -55,21 +55,8 @@
         return "cartoons/msm_cartoon_%04d.jpg".replace('%04d', fillUpZeros(nr, 4));
       },
 
-      randomCartoonNr = function(maxCartoons) {
-        var nr = randomNr(maxCartoons);
-        if (nr == currentCartoonNr) {
-          return randomCartoonNr(nr);
-        }
-        return nr;
-      },
-
       extractCartoonNr = function(string, maxCartoons) {
-        if (url = string.match(/cartoons?[=\/](\d+)/)) {
-          var possibleCartoonNr = parseInt(url[1]);
-          if (possibleCartoonNr > 0 && possibleCartoonNr <= maxCartoons) {
-            return possibleCartoonNr;
-          }
-        }
+        if (url = string.match(/cartoons?[=\/](.+)/)) { return url[1]; }
       };
 
       $("#facebook").on("click", function(event) {
@@ -91,7 +78,12 @@
         var dynamic = ( $('meta[name=dynamic]').size() > 0),
         maxCartoons = parseInt($('meta[name=dynamic],body').data('maxCartoons'));
 
-        cartoonNr = extractCartoonNr(decodeURI(window.location.href, maxCartoons)) || randomNr(maxCartoons);
+        cartoonNr = parseInt(extractCartoonNr(decodeURI(window.location.href)) || randomNr(maxCartoons));
+
+        if(isNaN(cartoonNr) || cartoonNr < 1 || cartoonNr > maxCartoons) {
+          window.location.assign('?');
+        }
+
         $("#cartoon-frame").html('<img id="cartoon" width="530" height="376" src="' + cartoonUrl(cartoonNr) + '">');
 
         urlPattern = (dynamic) ? "/cartoons/" : "?cartoon=";
