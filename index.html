@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Matti's Supermarkt</title>
+    <title>Matti's Supermarkt - Cartoons vom Wühltisch des Lebens</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta content="" name="keywords" />
-    <meta content="" name="description" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <meta name="keywords"         content="matti, cartoons" />
+    <meta name="description"      content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
+    <meta property="fb:app_id"    content="142898152440446" />
+    <meta property="og:site_name" content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
+    <script language="php">
+      $max_cartoons = iterator_count(new DirectoryIterator('cartoons/')) - 2;
+      $cartoonUrl = sprintf("cartoons/msm_cartoon_%04d.jpg", $_GET['cartoon']);
+      echo '<meta property="dynamic"  content="true" data-max-cartoons="' . $max_cartoons . '" />';
+      echo '<meta property="og:image" content="http://www.mattis-supermarkt.de/'.$cartoonUrl.'" />';
+      echo '<base href="/">';
+    </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <style type="text/css">
       body {
         color: #000000;
@@ -27,50 +36,18 @@
         margin: 0 auto;
       }
 
-      #TODO {
-        background-image: url(images/rechts_buttons.png);
-        background-repeat: no-repeat;
-        background-position: 0 376px;
-      }
-
-      #facebook {
-        margin-top: 5px;
-        width: 30px;
-        height: 30px;
-        display: block;
-      }
-
       #footer a {
         color: #000;
         margin: 4px 15px;
       }
     </style>
     <script>
-      var maxCartoons = 95,
-      appID = "142898152440446",
-
-      randomCartoonNr = function(currentCartoonNr) {
-        var nr = randomNr(maxCartoons);
-        if (nr == currentCartoonNr) {
-          return randomCartoonNr(nr);
-        }
-        return nr;
+      var randomNr = function(max, exclude) {
+        var nr = Math.floor(Math.random() * max) + 1;
+        return (nr != exclude) ? nr : randomNr(max, exclude);
       },
 
-      randomNr = function(max) {
-        return Math.round(Math.random() * max) + 1;
-      },
-
-      cartoonUrl = function(nr) {
-        return "cartoons/msm_cartoon_" + fillUpZeros(nr, 4) + ".jpg";
-      },
-
-      loadCartoon = function(nr) {
-        $(".next").attr("href", "?cartoon=" + randomCartoonNr(nr));
-        $("#cartoon").attr("src", cartoonUrl(nr));
-      },
-
-      fillUpZeros = function pad(number, length) {
+      fillUpZeros = function(number, length) {
         var str = '' + number;
         while (str.length < length) {
           str = '0' + str;
@@ -78,37 +55,36 @@
         return str;
       },
 
-      cartoonNr = randomCartoonNr();
+      cartoonUrl = function(nr) {
+        return "cartoons/msm_cartoon_%04d.jpg".replace('%04d', fillUpZeros(nr, 4));
+      },
 
-      if (url = decodeURI(window.location.href).match(/cartoon=(\d+)/)) {
-        var possibleCartoonNr = parseInt(url[1]);
-        if (possibleCartoonNr > 0 && possibleCartoonNr <= maxCartoons) {
-          cartoonNr = possibleCartoonNr;
-        }
+      extractCartoonNr = function(string, maxCartoons) {
+        if (url = string.match(/cartoons?[=\/](.+)/)) { return url[1]; }
       };
 
-      $("#facebook").live("click", function(event) {
-        var params = {
-          app_id:       appID,
-          link:         "http://rngtng.github.com/matti/?cartoon=" + cartoonNr,
-          picture:      "http://rngtng.github.com/matti/" + cartoonUrl(cartoonNr),
-          name:         "EIne toller comicx",
-          caption:      "Mehr Cartoons auf:",
-          description:  "http://asdads.de",
-          redirect_uri: "http://faceorama.warteschlange.de",
-        };
-
-        $(this).attr("href", function(index, url) {
-          return url + "?" + $.param(params);
-        });
-      });
-
       $(document).ready(function(){
-        loadCartoon(cartoonNr);
+        var dynamic = ( $('meta[property=dynamic]').size() > 0),
+        maxCartoons = parseInt($('meta[property=dynamic],body').data('maxCartoons'));
+
+        cartoonNr = parseInt(extractCartoonNr(decodeURI(window.location.href)) || randomNr(maxCartoons));
+
+        if(isNaN(cartoonNr) || cartoonNr < 1 || cartoonNr > maxCartoons) {
+          window.location.assign('?');
+        }
+
+        $("#cartoon-frame").html('<img id="cartoon" width="530" height="376" src="' + cartoonUrl(cartoonNr) + '">');
+
+        urlPattern = (dynamic) ? "/cartoons/" : "?cartoon=";
+        $(".next").attr("href", urlPattern + randomNr(maxCartoons, cartoonNr));
+
+        $("#facebook").attr("href", function(index, url) {
+          return url + decodeURI(window.location.href);
+        });
       });
     </script>
   </head>
-  <body alink="#EE0000" link="#0000EE" vlink="#551A8B">
+  <body alink="#EE0000" link="#0000EE" vlink="#551A8B" data-max-cartoons="95">
     <div id="main">
       <table border="0" cellpadding="0" cellspacing="0">
         <tbody>
@@ -121,20 +97,22 @@
           </tr>
           <tr>
             <td valign="top" align="right" width="154" height="376" background="images/left.jpg">
-              <a class="next" href="#"><img width="154" height="376" src="images/blank.gif" border="0"></a>
+              <a class="next" href=""><img width="154" height="376" src="images/blank.gif" border="0"></a>
             </td>
-            <td id="cartoon-fame" valign="top" width="530" height="376">
-              <img id="cartoon" width="530" height="376" src="images/loading.gif">
+            <td id="cartoon-frame" valign="top" width="530" height="376" background="images/loading.gif">
+              <script language="php">
+                echo '<img id="cartoon" width="530" height="376" src="'.$cartoonUrl.'">';
+              </script>
             </td>
             <td valign="top" align="left" width="157" height="376" background="images/right.jpg">
-              <a id="facebook" href="https://www.facebook.com/dialog/feed" target="_blank">
+              <a id="facebook" href="http://www.facebook.com/sharer.php?u=" target="_blank">
                 <img width="157" height="376" src="images/blank.gif" border="0">
               </a>
             </td>
           </tr>
           <tr>
             <td colspan="3" valign="top" width="841" height="43" background="images/footer.jpg">
-              <a href="/"><img width="841" height="43" src="images/blank.gif" border="0"></a>
+              <img width="841" height="43" src="images/blank.gif" border="0">
             </td>
           </tr>
           <tr>
@@ -142,7 +120,7 @@
               <small>
                 <a class="next" href="#">zuf&auml;lliger Cartoon</a>
                 <a href="#">Impressum</a>
-                <a href="#">eMail</a>
+                <a href="mailto:service@mattis-supermarkt.de">eMail</a>
               </small>
             </td>
           </tr>
