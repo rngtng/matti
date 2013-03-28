@@ -9,9 +9,12 @@
     <meta property="og:site_name" content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
     <script language="php">
       $max_cartoons = iterator_count(new DirectoryIterator('cartoons/')) - 2;
-      $cartoonUrl = sprintf("cartoons/msm_cartoon_%04d.jpg", $_GET['cartoon']);
-      echo '<meta property="dynamic"  content="true" data-max-cartoons="' . $max_cartoons . '" />';
-      echo '<meta property="og:image" content="http://www.mattis-supermarkt.de/'.$cartoonUrl.'" />';
+      $cartoon_nr   = $_GET['cartoon'];
+      $cartoon_url  = sprintf("cartoons/msm_cartoon_%04d.jpg", $cartoon_nr);
+      echo '<meta property="dynamic"  content="true" data-max-cartoons="'.$max_cartoons.'" />';
+      echo '<meta property="og:image" content="http://www.mattis-supermarkt.de/'.$cartoon_url.'" />';
+      echo '<link rel="prev" href="cartoons/'.($cartoon_nr-1).'">';
+      echo '<link rel="next" href="cartoons/'.($cartoon_nr+1).'">';
       echo '<base href="/">';
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
