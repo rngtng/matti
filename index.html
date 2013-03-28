@@ -70,9 +70,9 @@
         var dynamic = ( $('meta[property=dynamic]').size() > 0),
         maxCartoons = parseInt($('meta[property=dynamic],body').data('maxCartoons'));
 
-        cartoonNr = parseInt(extractCartoonNr(decodeURI(window.location.href)) || randomNr(maxCartoons));
+        cartoonNr = parseInt(extractCartoonNr(decodeURI(window.location.href)) || 0);
 
-        if(isNaN(cartoonNr) || cartoonNr < 1 || cartoonNr > maxCartoons) {
+        if(isNaN(cartoonNr) || cartoonNr < 0 || cartoonNr > maxCartoons) {
           window.location.assign('?');
         }
 
