@@ -3,19 +3,32 @@
   <head>
     <title>Matti's Supermarkt - Cartoons vom W&uuml;hltisch des Lebens</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta name="keywords"         content="matti, cartoons" />
-    <meta name="description"      content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
-    <meta property="fb:app_id"    content="142898152440446" />
+    <meta name="keywords"           content="matti, cartoons" />
+    <meta name="description"        content="Matti's Supermarkt - Cartoons vom W&uuml;hltisch des Lebens" />
+    <meta property="fb:app_id"      content="334718843317198" />
+    <meta property="og:url"         content="http://mattis-supermarkt.de" />
+    <meta property="og:title"       content="Matti's Supermarkt - Cartoons vom W&uuml;hltisch des Lebens" />
+    <meta property="og:description" content="" />
     <meta property="og:site_name" content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
     <script language="php">
       $max_cartoons = iterator_count(new DirectoryIterator('cartoons/')) - 2;
       $cartoon_nr   = $_GET['cartoon'];
       $cartoon_url  = sprintf("cartoons/msm_cartoon_%04d.jpg", $cartoon_nr);
-      echo '<meta property="dynamic"  content="true" data-max-cartoons="'.$max_cartoons.'" />';
-      echo '<meta property="og:image" content="http://www.mattis-supermarkt.de/'.$cartoon_url.'" />';
+      echo '<meta name="dynamic"  content="true" data-max-cartoons="'.$max_cartoons.'" />';
+      echo '<link rel="image_src" href="http://mattis-supermarkt.de/'.$cartoon_url.'" />';
+      echo '<meta property="og:image" content="http://mattis-supermarkt.de/'.$cartoon_url.'" />';
       echo '<link rel="prev" href="cartoons/'.($cartoon_nr-1).'">';
       echo '<link rel="next" href="cartoons/'.($cartoon_nr+1).'">';
       echo '<base href="/">';
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-39771036-1', 'mattis-supermarkt.de');
+      ga('send', 'pageview');
     </script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <style type="text/css">
@@ -31,6 +44,10 @@
 
       a {
         border: 0;
+      }
+
+      td {
+        background-repeat: no-repeat;
       }
 
       #main {
@@ -67,11 +84,12 @@
       };
 
       $(document).ready(function(){
-        var dynamic      = ( $('meta[property=dynamic]').size() > 0),
+        var dynamic      = ( $('meta[name=dynamic]').size() > 0),
+        url              = decodeURI(window.location.href),
         urlPattern       = (dynamic) ? "/cartoons/" : "?cartoon=",
         defaultCartoonNr = parseInt($('body').data('defaultCartoonNr')),
-        cartoonNr        = parseInt(extractCartoonNr(decodeURI(window.location.href)) || defaultCartoonNr),
-        maxCartoons      = parseInt($('meta[property=dynamic],body').data('maxCartoons'));
+        cartoonNr        = parseInt(extractCartoonNr(url) || defaultCartoonNr),
+        maxCartoons      = parseInt($('meta[name=dynamic],body').data('maxCartoons'));
 
         $("#cartoon-frame").html('<img id="cartoon" width="530" height="376" src="' + cartoonUrl(cartoonNr) + '">');
         $("#cartoon").on('error', function() {
@@ -81,9 +99,11 @@
 
         $(".next").attr("href", urlPattern + randomNr(maxCartoons, cartoonNr));
 
-        $("#facebook").attr("href", function(index, url) {
-          return url + decodeURI(window.location.href);
+        $("#facebook").attr("href", function(index, facebookUrl) {
+          return facebookUrl + url;
         });
+
+        $("#impressum").attr("href", urlPattern + "impressum");
       });
     </script>
   </head>
@@ -100,29 +120,31 @@
           </tr>
           <tr>
             <td valign="top" align="right" width="154" height="376" background="images/left.jpg">
-              <a class="next" href=""><img width="154" height="376" src="images/blank.gif" border="0"></a>
+              <a class="next" href="#"><img width="150" height="370" src="images/blank.gif" border="0"></a>
             </td>
-            <td id="cartoon-frame" valign="top" width="530" height="376" background="images/loading.gif">
-              <script language="php">
-                echo '<img id="cartoon" width="530" height="376" src="'.$cartoonUrl.'">';
-              </script>
+            <td valign="top" width="530" height="376" background="images/loading.gif">
+              <a id="cartoon-frame" class="next" href="#">
+                <script language="php">
+                  echo '<img id="cartoon" width="530" height="376" src="'.$cartoonUrl.'">';
+                </script>
+              </a>
             </td>
             <td valign="top" align="left" width="157" height="376" background="images/right.jpg">
               <a id="facebook" href="http://www.facebook.com/sharer.php?u=" target="_blank">
-                <img width="157" height="376" src="images/blank.gif" border="0">
+                <img width="155" height="375" src="images/blank.gif" border="0">
               </a>
             </td>
           </tr>
           <tr>
             <td colspan="3" valign="top" width="841" height="43" background="images/footer.jpg">
-              <img width="841" height="43" src="images/blank.gif" border="0">
+              <img width="840" height="42" src="images/blank.gif" border="0">
             </td>
           </tr>
           <tr>
             <td id="footer" colspan="3" align="center">
               <small>
                 <a class="next" href="#">zuf&auml;lliger Cartoon</a>
-                <a href="#">Impressum</a>
+                <a href="impressum">Impressum</a>
                 <a href="mailto:service@mattis-supermarkt.de">eMail</a>
               </small>
             </td>
