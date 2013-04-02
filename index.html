@@ -11,7 +11,7 @@
     <meta property="og:description" content="" />
     <meta property="og:site_name" content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
     <script language="php">
-      $max_cartoons = iterator_count(new DirectoryIterator('cartoons/')) - 2;
+      $max_cartoons = iterator_count(new DirectoryIterator('cartoons/')) - 3;
       $cartoon_nr   = $_GET['cartoon'];
       $cartoon_url  = sprintf("cartoons/msm_cartoon_%04d.jpg", $cartoon_nr);
       echo '<meta name="dynamic"  content="true" data-max-cartoons="'.$max_cartoons.'" />';
@@ -91,7 +91,7 @@
         cartoonNr        = parseInt(extractCartoonNr(url) || defaultCartoonNr),
         maxCartoons      = parseInt($('meta[name=dynamic],body').data('maxCartoons'));
 
-        $("#cartoon-frame").html('<img id="cartoon" width="530" height="376" src="' + cartoonUrl(cartoonNr) + '">');
+        $("#cartoon-frame:not(:has(img))").html('<img id="cartoon" width="530" height="376" src="' + cartoonUrl(cartoonNr) + '">');
         $("#cartoon").on('error', function() {
           // redirect in case cartoon no found
           window.location.assign( urlPattern + randomNr(maxCartoons) );
@@ -99,11 +99,11 @@
 
         $(".next").attr("href", urlPattern + randomNr(maxCartoons, cartoonNr));
 
-        $("#facebook").attr("href", function(index, facebookUrl) {
+        $(".facebook").attr("href", function(index, facebookUrl) {
           return facebookUrl + url;
         });
 
-        $("#impressum").attr("href", urlPattern + "impressum");
+        $(".impressum").attr("href", (dynamic) ? "impressum" : "?cartoon=9999" );
       });
     </script>
   </head>
@@ -125,12 +125,12 @@
             <td valign="top" width="530" height="376" background="images/loading.gif">
               <a id="cartoon-frame" class="next" href="#">
                 <script language="php">
-                  echo '<img id="cartoon" width="530" height="376" src="'.$cartoonUrl.'">';
+                  echo '<img id="cartoon" width="530" height="376" src="'.$cartoon_url.'">';
                 </script>
               </a>
             </td>
             <td valign="top" align="left" width="157" height="376" background="images/right.jpg">
-              <a id="facebook" href="http://www.facebook.com/sharer.php?u=" target="_blank">
+              <a class="facebook" href="http://www.facebook.com/sharer.php?u=" target="_blank">
                 <img width="155" height="375" src="images/blank.gif" border="0">
               </a>
             </td>
@@ -144,7 +144,8 @@
             <td id="footer" colspan="3" align="center">
               <small>
                 <a class="next" href="#">zuf&auml;lliger Cartoon</a>
-                <a href="impressum">Impressum</a>
+                <a class="facebook" href="http://www.facebook.com/sharer.php?u=" target="_blank">bei Facebook posten</a>
+                <a class="impressum" href="impressum">Impressum</a>
                 <a href="mailto:service@mattis-supermarkt.de">eMail</a>
               </small>
             </td>
