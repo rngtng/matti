@@ -6,19 +6,19 @@
     <meta name="keywords"           content="matti, cartoons" />
     <meta name="description"        content="Matti's Supermarkt - Cartoons vom W&uuml;hltisch des Lebens" />
     <meta property="fb:app_id"      content="334718843317198" />
-    <meta property="og:url"         content="http://mattis-supermarkt.de" />
     <meta property="og:title"       content="Matti's Supermarkt - Cartoons vom W&uuml;hltisch des Lebens" />
     <meta property="og:description" content="" />
-    <meta property="og:site_name" content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
+    <meta property="og:site_name"   content="Matti's Supermarkt - Cartoons vom Wühltisch des Lebens" />
     <script language="php">
       $max_cartoons = iterator_count(new DirectoryIterator('cartoons/')) - 3;
       $cartoon_nr   = $_GET['cartoon'];
-      $cartoon_url  = sprintf("cartoons/msm_cartoon_%04d.jpg", $cartoon_nr);
+      $cartoon_src  = sprintf("/cartoons/msm_cartoon_%04d.jpg", $cartoon_nr);
       echo '<meta name="dynamic"  content="true" data-max-cartoons="'.$max_cartoons.'" />';
-      echo '<link rel="image_src" href="http://mattis-supermarkt.de/'.$cartoon_url.'" />';
-      echo '<meta property="og:image" content="http://mattis-supermarkt.de/'.$cartoon_url.'" />';
-      echo '<link rel="prev" href="cartoons/'.($cartoon_nr-1).'">';
-      echo '<link rel="next" href="cartoons/'.($cartoon_nr+1).'">';
+      echo '<meta property="og:url"   content="http://mattis-supermarkt.de'.sprintf("/cartoons/%d", $cartoon_nr).'" />';
+      echo '<meta property="og:image" content="http://mattis-supermarkt.de'.$cartoon_src.'" />';
+      echo '<link rel="image_src"        href="http://mattis-supermarkt.de'.$cartoon_src.'" />';
+      echo '<link rel="prev"             href="http://mattis-supermarkt.de'.sprintf("/cartoons/%d", $cartoon_nr-1).'">';
+      echo '<link rel="next"             href="http://mattis-supermarkt.de'.sprintf("/cartoons/%d", $cartoon_nr+1).'">';
       echo '<base href="/">';
     </script>
     <script>
@@ -125,7 +125,7 @@
             <td valign="top" width="530" height="376" background="images/loading.gif">
               <a id="cartoon-frame" class="next" href="#">
                 <script language="php">
-                  echo '<img id="cartoon" width="530" height="376" src="'.$cartoon_url.'">';
+                  echo '<img id="cartoon" width="530" height="376" src="'.$cartoon_src.'">';
                 </script>
               </a>
             </td>
